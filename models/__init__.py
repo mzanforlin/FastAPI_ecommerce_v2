@@ -1,1 +1,2 @@
-from models.tb_usuarios import Usuarios
+from models.user import User
+from models.product import Product

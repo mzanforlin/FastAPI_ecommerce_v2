@@ -1,7 +1,8 @@
 from sqlalchemy import create_engine
-#from models import base
+from sqlalchemy.orm import sessionmaker
 from models.base import Base  # Importa a base que você criou no __init__.py ou base.py
-from models.tb_usuarios import Usuarios  # Importa a classe 'Usuarios' do arquivo tb_usuarios.py
+from models.user import User  # Importa a classe 'Usuarios' do arquivo tb_usuarios.py
+from models.product import Product
 import os
 from dotenv import load_dotenv
 
@@ -18,16 +19,12 @@ DB_PASS = os.getenv('DB_PASS_PROD')
 DB_SCHEMA = os.getenv('DB_SCHEMA_PROD')  # Se quiser usar schema depois
 
 # Montar string de conexão
-DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}?options=-c%20search_path={DB_SCHEMA}"
 
 # Criar engine e estabelecer conexão
-engine = create_engine(DATABASE_URL)
+db = create_engine(DATABASE_URL)
 
-# Criar as tabelas no banco de dados
-if __name__ == "__main__":
-    try:
-        Base.metadata.create_all(engine) # Isso cria todas as tabelas que foram definidas com a Base
-        print("✅ Tabela 'Usuarios' criada com sucesso.")
-    except Exception as e:
-        print("❌ Falha ao criar a tabela.")
-        print(f"Erro: {e}")
+Session = sessionmaker()
+session = Session()
+
+Base.metadata.create_all(bind= db)

@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime, func
-from .base import Base
+from models.base import Base
 
-class User(Base):
-    __tablename__ = 'products'
+class Product(Base):
+    __tablename__ = 'tb_products'
 
     id = Column(Integer,primary_key= True)
     product = Column(String(100), nullable= False)
